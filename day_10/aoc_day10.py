@@ -12,9 +12,8 @@ for l in lines:
     else:
         add.append(0)
 
-# print(add)
+# Part 1
 
-cycle = 0
 signal = 1
 signal_history = []
 
@@ -27,9 +26,31 @@ signal_sum = 0
 
 for i in index:
     signal_sum += i * signal_history[i-2]
-    # print(signal_history[i-1])
 
 print(signal_sum)
 
+# Part 2
+
+
+def prt_output(signal):
+    pattern = ["."] * 40
+    index = 0
+    prev = 0
+    for s in signal:
+        # we use prev value to check and print because the register only moves at the end of the second cycle of addx
+        if index == prev-1 or index == prev or index == prev+1:
+            pattern[index] = "#"
+        prev = s
+        index += 1
+
+    print(''.join(pattern))
+
+
+prt_output(signal_history[:40])
+prt_output(signal_history[40:80])
+prt_output(signal_history[80:120])
+prt_output(signal_history[120:160])
+prt_output(signal_history[160:200])
+prt_output(signal_history[200:240])
 
 
