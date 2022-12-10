@@ -1,4 +1,4 @@
-with open('aoc_input1.1.txt') as f:
+with open('input.txt') as f:
     contents = f.readlines()
 
 food = []
