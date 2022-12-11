@@ -13,22 +13,22 @@ class Monkey:
         self.inspect = inspect
 
 
-def worry_operation(symbol, item, worry):
+def worry_operation(symbol, item, worry, lcm):
     if worry.isnumeric():
         worry = int(worry)
         if symbol == '+':
-            return item + worry
+            return (item + worry) % lcm
         elif symbol == '-':
-            return item - worry
+            return (item - worry) % lcm
         elif symbol == '*':
-            return item * worry
+            return (item * worry) % lcm
     else:
         if symbol == '+':
-            return item + item
+            return (item + item) % lcm
         elif symbol == '-':
-            return item - item
+            return (item - item) % lcm
         elif symbol == '*':
-            return item * item
+            return (item * item) % lcm
 
 
 with open("input.txt") as file:
@@ -69,12 +69,14 @@ print(monkey_list)
 monkey_group = defaultdict()
 
 # print(len(monkey_list))
-
+lcm = 1
 for i in range(len(monkey_list)):
     monkey_group[i] = Monkey(monkey_list[i][1], monkey_list[i][2], monkey_list[i][3], monkey_list[i][4], monkey_list[i][5], 0)
+    lcm *= int(monkey_group[i].decision[0])
 
-end_round = 20
-round  = 1
+end_round = 10000  # for Part 1, use end_round = 20; for Part 2, use end_round = 10000
+round = 1
+worry_level = 1  # for Part 1, use worry_level = 3; for Part 2, use worry_level = 1
 
 while round != end_round+1:
     for i in range(len(monkey_list)):
@@ -82,7 +84,7 @@ while round != end_round+1:
         item_holding = current_monkey.items.copy()
         for item in item_holding:
             current_monkey.inspect += 1
-            new_worry = (worry_operation(current_monkey.worry[0], item, current_monkey.worry[1])) // 3
+            new_worry = (worry_operation(current_monkey.worry[0], item, current_monkey.worry[1], lcm)) // worry_level
             yes_no = new_worry % int(current_monkey.decision[0])
             if yes_no == 0:
                 current_monkey.items.remove(item)
@@ -98,9 +100,3 @@ for i in range(len(monkey_list)):
 
 inspect_count.sort(reverse = True)
 print(inspect_count[0] * inspect_count[1])
-
-
-
-
-
-
