@@ -1,7 +1,7 @@
 with open("input.txt") as file:
     old_lines = [line.rstrip() for line in file]
 
-# print(old_lines)
+print(old_lines)
 
 
 def find_index(x, search):
@@ -37,79 +37,65 @@ for i in old_lines:
     i = i.replace("E", "z")
     lines.append(i)
 
-start = []
-
-# print(lines)
-
-row_index = 0
-for row in lines:
-    col_index = 0
-    for col in row:
-        if col == "a":
-            start.append((row_index, col_index))
-        col_index += 1
-    row_index += 1
-
-print(len(start))
-
-start_point = {}
-
 max_row = len(lines)
 max_col = len(lines[0])
 
+print(end_index)
 
 print(max_row)
 print(max_col)
 
-count_index = 0
+start_list = []
 
-for start_index in start:
+row_index = 0
 
-    unvisited = [start_index]
-    visited = []
+for row in lines:
+    col_index = 0
+    for col in row:
+        if col == "a":
+            start_list.append((row_index, col_index))
+        col_index += 1
+    row_index += 1
 
-    for i in range(max_row):
-        for j in range(max_col):
-            if (i, j) != start_index:
-                unvisited.append((i, j))
+unvisited = start_list.copy()
 
-    step_dict = {}
+visited = []
 
-    for i in unvisited:
-        if i == start_index:
-            step_dict[i] = 0
-        else:
-            step_dict[i] = 9999
+for i in range(max_row):
+    for j in range(max_col):
+        if (i, j) not in start_list:
+            unvisited.append((i, j))
 
-    current = start_index
+step_dict = {}
 
-    while len(unvisited) != 0:
-        i = current
-        new = (i[0]-1, i[1])  # check left
-        check_grid(current, new, step_dict, visited, unvisited, lines)
-        new = (i[0]+1, i[1])  # check right
-        check_grid(current, new, step_dict, visited, unvisited, lines)
-        new = (i[0], i[1]+1)  # check bottom
-        check_grid(current, new, step_dict, visited, unvisited, lines)
-        new = (i[0], i[1]-1)  # check top
-        check_grid(current, new, step_dict, visited, unvisited, lines)
+for i in unvisited:
+    if i in start_list:
+        step_dict[i] = 0
+    else:
+        step_dict[i] = 9999
 
-        visited.append(i)
-        unvisited.remove(i)
+current = start_list[0]
 
-        if len(unvisited) != 0 or end_index not in visited:
-            current_value = step_dict[unvisited[0]]
-            current = unvisited[0]
-            for u in unvisited:
-                if step_dict[u] < current_value:
-                    current_value = step_dict[u]
-                    current = u
-        else:
-            break
+while len(unvisited) != 0:
+    i = current
+    new = (i[0]-1, i[1])  # check left
+    check_grid(current, new, step_dict, visited, unvisited, lines)
+    new = (i[0]+1, i[1])  # check right
+    check_grid(current, new, step_dict, visited, unvisited, lines)
+    new = (i[0], i[1]+1)  # check bottom
+    check_grid(current, new, step_dict, visited, unvisited, lines)
+    new = (i[0], i[1]-1)  # check top
+    check_grid(current, new, step_dict, visited, unvisited, lines)
 
-    start_point[start_index] = step_dict[end_index]
-    count_index += 1
-    print(count_index)
+    visited.append(i)
+    unvisited.remove(i)
 
-# print(start_point)
-print(min(start_point.values()))
+    if len(unvisited) != 0:
+        current_value = step_dict[unvisited[0]]
+        current = unvisited[0]
+        for u in unvisited:
+            if step_dict[u] < current_value:
+                current_value = step_dict[u]
+                current = u
+
+print(step_dict[end_index])
